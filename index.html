@@ -209,37 +209,42 @@ setTimeout(showFinal,2000);
 });
 
 function showFinal(){
+
+// очищаем всё
 card.innerHTML="";
 
 // создаём облачко
 let cloud=document.createElement("div");
-cloud.style.position="absolute";
+cloud.style.position="fixed";
 cloud.style.left="50%";
 cloud.style.top="50%";
 cloud.style.transform="translate(-50%,-50%)";
 cloud.style.background="white";
-cloud.style.padding="40px 60px";
-cloud.style.borderRadius="50px";
-cloud.style.boxShadow="0 20px 60px rgba(0,0,0,0.15)";
-cloud.style.fontSize="28px";
+cloud.style.padding="50px 70px";
+cloud.style.borderRadius="60px";
+cloud.style.boxShadow="0 20px 60px rgba(0,0,0,0.2)";
+cloud.style.fontSize="32px";
 cloud.style.color="#ff4d88";
 cloud.style.textAlign="center";
-cloud.style.animation="fadeIn 1s ease forwards";
+cloud.style.zIndex="1000";
+cloud.style.animation="fadeIn 0.8s ease forwards";
 
 cloud.innerHTML="Люблю тебя, МОЙ ЗАЙЧОНОК 😘💖";
 
 document.body.appendChild(cloud);
 
-// сердечки разлетаются от центра
-for(let i=0;i<60;i++){
+// сердечки от центра
+for(let i=0;i<70;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💖";
+heart.style.position="fixed";
 heart.style.left="50%";
 heart.style.top="50%";
-heart.style.setProperty('--x',(Math.random()-0.5)*600+'px');
-heart.style.setProperty('--y',(Math.random()-0.5)*400+'px');
+heart.style.setProperty('--x',(Math.random()-0.5)*800+'px');
+heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
 document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),2000);
 }
+
 }
