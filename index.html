@@ -25,10 +25,7 @@ text-align:center;
 box-shadow:0 20px 60px rgba(0,0,0,0.12);
 width:430px;
 position:relative;
-overflow:hidden;
 }
-
-/* ---------- START ---------- */
 
 #startScreen{
 cursor:pointer;
@@ -37,7 +34,6 @@ cursor:pointer;
 .bigHeart{
 font-size:130px;
 animation:pulse 1.5s infinite;
-transition:transform .6s ease, opacity .6s ease;
 }
 
 @keyframes pulse{
@@ -51,19 +47,6 @@ font-size:22px;
 color:#ff4d88;
 margin-top:10px;
 }
-
-.petal{
-position:absolute;
-font-size:28px;
-animation:petalFly 1.5s ease-out forwards;
-}
-
-@keyframes petalFly{
-0%{transform:translate(0,0) scale(1);opacity:1}
-100%{transform:translate(var(--x),var(--y)) scale(.5);opacity:0}
-}
-
-/* ---------- MAIN ---------- */
 
 #mainContent{ display:none; }
 
@@ -113,10 +96,9 @@ left:10%;
 background:#ff4d4d;
 color:white;
 right:10%;
-transition:left 0.6s ease, top 0.6s ease;
 }
 
-/* ---------- FINAL ---------- */
+/* FINAL CLOUD */
 
 .cloud{
 position:absolute;
@@ -130,12 +112,6 @@ box-shadow:0 20px 60px rgba(0,0,0,0.15);
 font-size:28px;
 color:#ff4d88;
 text-align:center;
-animation:pop 0.8s ease;
-}
-
-@keyframes pop{
-from{transform:translate(-50%,-50%) scale(.5);opacity:0}
-to{transform:translate(-50%,-50%) scale(1);opacity:1}
 }
 
 .centerHeart{
@@ -166,7 +142,7 @@ animation:explode 2s ease-out forwards;
 <div id="emoji">🙂</div>
 <div id="message"></div>
 
-<div class="buttons">
+<div class="buttons" id="buttons">
 <button id="yes">Yes</button>
 <button id="no">No</button>
 </div>
@@ -185,6 +161,7 @@ const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const emoji=document.getElementById("emoji");
 const message=document.getElementById("message");
+const buttons=document.getElementById("buttons");
 const card=document.getElementById("card");
 
 let count=0;
@@ -197,58 +174,36 @@ const sadStages=[
 {emoji:"😭💦", text:"this is so unfair 😭"}
 ];
 
-/* ---------- START ---------- */
+/* START */
 
 startScreen.addEventListener("click",()=>{
-
-const heart=document.querySelector(".bigHeart");
-heart.style.transform="scale(1.6)";
-heart.style.opacity="0";
-
-for(let i=0;i<25;i++){
-let petal=document.createElement("div");
-petal.className="petal";
-petal.innerHTML="🌸";
-petal.style.left="50%";
-petal.style.top="50%";
-petal.style.setProperty('--x',(Math.random()-0.5)*600+'px');
-petal.style.setProperty('--y',(Math.random()-0.5)*500+'px');
-document.body.appendChild(petal);
-setTimeout(()=>petal.remove(),1500);
-}
-
-music.volume=0;
-music.play();
-let fade=setInterval(()=>{
-if(music.volume<1){
-music.volume+=0.05;
-}else{clearInterval(fade);}
-},100);
-
-setTimeout(()=>{
 startScreen.style.display="none";
 mainContent.style.display="block";
-},1000);
-
+music.play();
 });
 
-/* ---------- NO BUTTON ---------- */
+/* NO BUTTON — ТОЛЬКО В БЛОКЕ КНОПОК */
 
 function moveNo(){
-const cardRect = card.getBoundingClientRect();
+
+const areaRect = buttons.getBoundingClientRect();
 const noRect = no.getBoundingClientRect();
 
-const maxX = cardRect.width - noRect.width - 20;
-const maxY = cardRect.height - noRect.height - 20;
+const maxX = areaRect.width - noRect.width;
+const maxY = areaRect.height - noRect.height;
 
-no.style.left = Math.random()*maxX+"px";
-no.style.top = Math.random()*maxY+"px";
+const randomX = Math.random() * maxX;
+const randomY = Math.random() * maxY;
 
+no.style.left = randomX + "px";
+no.style.top = randomY + "px";
+
+/* паника */
 if(count>=2){
-no.style.transition="left 0.25s ease, top 0.25s ease";
+no.style.transition="all 0.2s ease";
 }
 if(count>=3){
-no.style.transition="left 0.15s linear, top 0.15s linear";
+no.style.transition="all 0.1s linear";
 }
 }
 
@@ -260,12 +215,14 @@ emoji.innerHTML=sadStages[count].emoji;
 message.innerHTML=sadStages[count].text;
 count++;
 }
+
 yesScale+=0.2;
 yes.style.transform=`scale(${yesScale})`;
+
 moveNo();
 });
 
-/* ---------- YES BUTTON ---------- */
+/* YES */
 
 yes.addEventListener("click",()=>{
 confetti({particleCount:300,spread:150});
@@ -283,12 +240,12 @@ I love you to the moon and back 🌙✨
 `;
 document.body.appendChild(cloud);
 
-for(let i=0;i<80;i++){
+for(let i=0;i<60;i++){
 let heart=document.createElement("div");
 heart.className="centerHeart";
 heart.innerHTML="💖";
-heart.style.setProperty('--x',(Math.random()-0.5)*800+'px');
-heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
+heart.style.setProperty('--x',(Math.random()-0.5)*600+'px');
+heart.style.setProperty('--y',(Math.random()-0.5)*400+'px');
 document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),2000);
 }
