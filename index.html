@@ -1,5 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#ffd6e7,#ffeef5);
+font-family:sans-serif;
+overflow:hidden;
+}
+
+.card{
+background:white;
+padding:40px;
+border-radius:30px;
+text-align:center;
+box-shadow:0 20px 60px rgba(0,0,0,0.12);
+width:430px;
+position:relative;
+}
+
+/* START SCREEN */
+
+#startScreen{
+cursor:pointer;
+}
+
+.bigHeart{
+font-size:130px;
+animation:pulse 1.5s infinite;
+transition:transform .6s ease, opacity .6s ease;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
+.startText{
+font-size:22px;
+color:#ff4d88;
+margin-top:10px;
+}
+
+/* petals */
+
+.petal{
+position:absolute;
+font-size:28px;
+animation:petalFly 1.5s ease-out forwards;
+}
+
+@keyframes petalFly{
+0%{transform:translate(0,0) scale(1);opacity:1}
+100%{transform:translate(var(--x),var(--y)) scale(.5);opacity:0}
+}
+
+/* MAIN */
+
+#mainContent{
+display:none;
+}
+
+h1{
+color:#ff4d88;
+margin-bottom:20px;
+}
+
+#emoji{
+font-size:120px;
+height:140px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+#message{
+margin-top:10px;
+font-size:20px;
+color:#ff4d88;
+min-height:30px;
+}
+
+.buttons{
+position:relative;
+height:120px;
+margin-top:25px;
+}
+
+button{
+border:none;
+padding:18px 45px;
+font-size:22px;
+border-radius:40px;
+cursor:pointer;
+position:absolute;
+transition:.3s;
+}
+
+#yes{
+background:#4CAF50;
+color:white;
+left:8%;
+}
+
+#no{
+background:#ff4d4d;
+color:white;
+transition:left 0.6s ease, top 0.6s ease;
+}
+
+/* FINAL CLOUD */
+
+.cloud{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:40px 60px;
+border-radius:50px;
+box-shadow:0 20px 60px rgba(0,0,0,0.15);
+font-size:28px;
+color:#ff4d88;
+text-align:center;
+animation:pop 1s ease;
+}
+
+@keyframes pop{
+from{transform:translate(-50%,-50%) scale(.5);opacity:0}
+to{transform:translate(-50%,-50%) scale(1);opacity:1}
+}
+
+.heart{
+position:absolute;
+left:50%;
+top:50%;
+font-size:30px;
+animation:explode 2s ease-out forwards;
+}
+
+@keyframes explode{
+0%{transform:translate(0,0) scale(.5);opacity:1}
+100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+
+<div id="startScreen">
+<div class="bigHeart">💗</div>
+<div class="startText">Click me 💕</div>
+</div>
+
+<div id="mainContent">
+<h1>Will you be my Valentine? 💕</h1>
+<div id="emoji">🙂</div>
+<div id="message"></div>
+
+<div class="buttons">
+<button id="yes">Yes</button>
+<button id="no">No</button>
+</div>
+</div>
+
+</div>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
 <script>
 
+const startScreen=document.getElementById("startScreen");
+const mainContent=document.getElementById("mainContent");
+const music=document.getElementById("bgMusic");
 const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const emoji=document.getElementById("emoji");
@@ -16,20 +199,60 @@ const sadStages=[
 {emoji:"😭💦", text:"this is so unfair 😭"}
 ];
 
-// ДВИЖЕНИЕ В ПРЕДЕЛАХ БЕЛОЙ КАРТОЧКИ
-function moveNo(){
+/* START CLICK */
 
+startScreen.addEventListener("click",()=>{
+
+const heart=document.querySelector(".bigHeart");
+heart.style.transform="scale(1.6)";
+heart.style.opacity="0";
+
+for(let i=0;i<25;i++){
+let petal=document.createElement("div");
+petal.className="petal";
+petal.innerHTML="🌸";
+petal.style.left="50%";
+petal.style.top="50%";
+petal.style.setProperty('--x',(Math.random()-0.5)*600+'px');
+petal.style.setProperty('--y',(Math.random()-0.5)*500+'px');
+document.body.appendChild(petal);
+setTimeout(()=>petal.remove(),1500);
+}
+
+music.volume=0;
+music.play();
+let fade=setInterval(()=>{
+if(music.volume<1){
+music.volume+=0.05;
+}else{
+clearInterval(fade);
+}
+},100);
+
+setTimeout(()=>{
+startScreen.style.display="none";
+mainContent.style.display="block";
+},1000);
+
+});
+
+/* NO BUTTON */
+
+function moveNo(){
 const cardRect = card.getBoundingClientRect();
 const noRect = no.getBoundingClientRect();
-
 const maxX = cardRect.width - noRect.width - 20;
 const maxY = cardRect.height - noRect.height - 20;
 
-const randomX = Math.random() * maxX;
-const randomY = Math.random() * maxY;
+no.style.left = Math.random()*maxX+"px";
+no.style.top = Math.random()*maxY+"px";
 
-no.style.left = randomX + "px";
-no.style.top = randomY + "px";
+if(count>=2){
+no.style.transition="left 0.25s ease, top 0.25s ease";
+}
+if(count>=3){
+no.style.transition="left 0.15s linear, top 0.15s linear";
+}
 }
 
 no.addEventListener("mouseover",moveNo);
@@ -40,18 +263,16 @@ emoji.innerHTML=sadStages[count].emoji;
 message.innerHTML=sadStages[count].text;
 count++;
 }
-
 yesScale+=0.2;
 yes.style.transform=`scale(${yesScale})`;
-
 moveNo();
 });
 
-yes.addEventListener("click",()=>{
+/* YES BUTTON */
 
+yes.addEventListener("click",()=>{
 confetti({particleCount:300,spread:150});
 setTimeout(showFinal,2000);
-
 });
 
 function showFinal(){
@@ -63,10 +284,8 @@ cloud.innerHTML=`
 <strong>I love you, Honey-bunny!!! 💖</strong><br><br>
 I love you to the moon and back 🌙✨
 `;
-
 document.body.appendChild(cloud);
 
-// сердца
 for(let i=0;i<80;i++){
 let heart=document.createElement("div");
 heart.className="heart";
@@ -76,7 +295,9 @@ heart.style.setProperty('--y',(Math.random()-0.5)*400+'px');
 document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),2000);
 }
-
 }
 
 </script>
+
+</body>
+</html>
