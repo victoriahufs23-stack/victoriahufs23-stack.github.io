@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Valentine</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
 body{
@@ -22,24 +23,33 @@ padding:40px;
 border-radius:30px;
 text-align:center;
 box-shadow:0 20px 60px rgba(0,0,0,0.12);
-width:400px;
+width:420px;
 }
 
 h1{
 color:#ff4d88;
-margin-bottom:20px;
+margin-bottom:25px;
+}
+
+#emoji{
+font-size:120px;
+transition:.3s;
+height:140px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .buttons{
 position:relative;
-height:100px;
+height:120px;
 margin-top:20px;
 }
 
 button{
 border:none;
-padding:15px 35px;
-font-size:20px;
+padding:18px 45px;
+font-size:22px;
 border-radius:40px;
 cursor:pointer;
 position:absolute;
@@ -58,15 +68,18 @@ color:white;
 right:8%;
 }
 
-.tear{
-animation:tearDrop 1.4s infinite ease-in;
+.heart{
+position:absolute;
+left:50%;
+top:50%;
+font-size:30px;
+animation:explode 2s ease-out forwards;
 }
 
-@keyframes tearDrop{
-0%{transform:translateY(0); opacity:1}
-100%{transform:translateY(30px); opacity:0}
+@keyframes explode{
+0%{transform:translate(0,0) scale(.5);opacity:1}
+100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
 }
-
 </style>
 </head>
 <body>
@@ -74,7 +87,7 @@ animation:tearDrop 1.4s infinite ease-in;
 <div class="card">
 <h1>Will you be my Valentine? 💕</h1>
 
-<div id="scene"></div>
+<div id="emoji">🙂</div>
 
 <div class="buttons">
 <button id="yes">Yes</button>
@@ -84,56 +97,59 @@ animation:tearDrop 1.4s infinite ease-in;
 
 <script>
 
-const no=document.getElementById("no");
 const yes=document.getElementById("yes");
-const scene=document.getElementById("scene");
+const no=document.getElementById("no");
+const emoji=document.getElementById("emoji");
 
 let count=0;
+let yesScale=1;
+
+const sadStages=[
+"🥺",
+"😢",
+"😭",
+"😭💦"
+];
+
+no.addEventListener("mouseover",()=>{
+no.style.transform=`translate(${Math.random()*60-30}px,${Math.random()*40-20}px)`;
+});
 
 no.addEventListener("click",()=>{
-
+if(count<sadStages.length){
+emoji.innerHTML=sadStages[count];
+emoji.style.transform="scale(1.2)";
+setTimeout(()=>emoji.style.transform="scale(1)",200);
 count++;
+}
 
-if(count===1){
+yesScale+=0.2;
+yes.style.transform=`scale(${yesScale})`;
+});
 
-scene.innerHTML=`
-<svg width="200" height="200" viewBox="0 0 200 200">
+yes.addEventListener("click",()=>{
 
-<!-- Shadow -->
-<ellipse cx="100" cy="170" rx="45" ry="10" fill="rgba(0,0,0,0.1)" />
+// Конфетти
+confetti({
+particleCount:300,
+spread:150
+});
 
-<!-- Body -->
-<ellipse cx="100" cy="120" rx="45" ry="50" fill="url(#gradWhite)" />
+if(count===0){
+emoji.innerHTML="😍";
+}else{
+emoji.innerHTML="🥳💖";
+}
 
-<!-- Head -->
-<ellipse cx="100" cy="75" rx="55" ry="50" fill="url(#gradWhite)" />
-
-<!-- Ears -->
-<ellipse cx="75" cy="35" rx="18" ry="28" fill="url(#gradWhite)" />
-<ellipse cx="125" cy="35" rx="18" ry="28" fill="url(#gradWhite)" />
-
-<!-- Eyes -->
-<ellipse cx="85" cy="75" rx="6" ry="8" fill="#5b3a2e" />
-<ellipse cx="115" cy="75" rx="6" ry="8" fill="#5b3a2e" />
-
-<!-- Cheeks -->
-<circle cx="70" cy="95" r="12" fill="#ffb3c7" opacity=".6"/>
-<circle cx="130" cy="95" r="12" fill="#ffb3c7" opacity=".6"/>
-
-<!-- Tears -->
-<ellipse class="tear" cx="85" cy="90" rx="4" ry="7" fill="#5ec6ff"/>
-<ellipse class="tear" cx="115" cy="90" rx="4" ry="7" fill="#5ec6ff" style="animation-delay:.6s"/>
-
-<defs>
-<radialGradient id="gradWhite" cx="50%" cy="40%">
-<stop offset="0%" stop-color="#ffffff"/>
-<stop offset="100%" stop-color="#f0f0f0"/>
-</radialGradient>
-</defs>
-
-</svg>
-`;
-
+// Сердца из центра
+for(let i=0;i<70;i++){
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💖";
+heart.style.setProperty('--x',(Math.random()-0.5)*900+'px');
+heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),2000);
 }
 
 });
