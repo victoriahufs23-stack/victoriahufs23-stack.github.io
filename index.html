@@ -24,6 +24,7 @@ border-radius:30px;
 text-align:center;
 box-shadow:0 20px 60px rgba(0,0,0,0.12);
 width:430px;
+position:relative;
 }
 
 h1{
@@ -33,11 +34,11 @@ margin-bottom:20px;
 
 #emoji{
 font-size:120px;
-transition:.3s;
 height:140px;
 display:flex;
 align-items:center;
 justify-content:center;
+transition:.3s;
 }
 
 #message{
@@ -77,7 +78,7 @@ right:8%;
 }
 
 .heart{
-position:absolute;
+position:fixed;
 left:50%;
 top:50%;
 font-size:30px;
@@ -85,20 +86,35 @@ animation:explode 2s ease-out forwards;
 }
 
 @keyframes explode{
-0%{transform:translate(0,0) scale(.5);opacity:1}
-100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
+0%{
+transform:translate(-50%,-50%) scale(.5);
+opacity:1;
+}
+100%{
+transform:translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(2);
+opacity:0;
+}
 }
 
-.loveText{
-position:absolute;
-font-size:28px;
+.cloud{
+position:fixed;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:50px 70px;
+border-radius:60px;
+box-shadow:0 20px 60px rgba(0,0,0,0.2);
+font-size:32px;
 color:#ff4d88;
-animation:fadeIn 1s ease forwards;
+text-align:center;
+animation:fadeIn .8s ease forwards;
+z-index:1000;
 }
 
 @keyframes fadeIn{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1; transform:translateY(0);}
+from{opacity:0; transform:translate(-50%,-40%) scale(.8);}
+to{opacity:1; transform:translate(-50%,-50%) scale(1);}
 }
 </style>
 </head>
@@ -110,14 +126,11 @@ to{opacity:1; transform:translateY(0);}
 <div id="emoji">🙂</div>
 <div id="message"></div>
 
-<div class="buttons">
+<div class="buttons" id="buttons">
 <button id="yes">Yes</button>
 <button id="no">No</button>
 </div>
 </div>
-
-<!-- МУЗЫКА -->
-<audio id="bgMusic" src="music.mp3" loop></audio>
 
 <script>
 
@@ -126,11 +139,10 @@ const no=document.getElementById("no");
 const emoji=document.getElementById("emoji");
 const message=document.getElementById("message");
 const card=document.getElementById("card");
-const music=document.getElementById("bgMusic");
+const buttons=document.getElementById("buttons");
 
 let count=0;
 let yesScale=1;
-let musicStarted=false;
 
 const sadStages=[
 {emoji:"🥺", text:"please don’t say no…"},
@@ -139,31 +151,32 @@ const sadStages=[
 {emoji:"😭💦", text:"this is so unfair 😭"}
 ];
 
-// ФУНКЦИЯ ПЛАВНОГО ЗАПУСКА МУЗЫКИ
-function startMusic(){
-if(musicStarted) return;
-musicStarted=true;
+/* NO BUTTON movement only inside button area */
 
-music.volume=0;
-music.play();
+function moveNo(){
+const areaRect = buttons.getBoundingClientRect();
+const noRect = no.getBoundingClientRect();
 
-let fade=setInterval(()=>{
-if(music.volume<1){
-music.volume+=0.05;
-}else{
-clearInterval(fade);
+const maxX = areaRect.width - noRect.width;
+const maxY = areaRect.height - noRect.height;
+
+const randomX = Math.random() * maxX;
+const randomY = Math.random() * maxY;
+
+no.style.left = randomX + "px";
+no.style.top = randomY + "px";
+
+if(count>=2){
+no.style.transition="all 0.2s ease";
 }
-},100);
+if(count>=3){
+no.style.transition="all 0.1s linear";
+}
 }
 
-no.addEventListener("mouseover",()=>{
-no.style.transform=`translate(${Math.random()*60-30}px,${Math.random()*40-20}px)`;
-});
+no.addEventListener("mouseover",moveNo);
 
 no.addEventListener("click",()=>{
-
-startMusic();
-
 if(count<sadStages.length){
 emoji.innerHTML=sadStages[count].emoji;
 message.innerHTML=sadStages[count].text;
@@ -173,11 +186,12 @@ count++;
 }
 yesScale+=0.2;
 yes.style.transform=`scale(${yesScale})`;
+moveNo();
 });
 
-yes.addEventListener("click",()=>{
+/* YES BUTTON */
 
-startMusic();
+yes.addEventListener("click",()=>{
 
 confetti({
 particleCount:300,
@@ -192,55 +206,27 @@ emoji.innerHTML="🥳💖";
 message.innerHTML="You have no choice now 😏💘";
 }
 
-// сердца
-for(let i=0;i<60;i++){
-let heart=document.createElement("div");
-heart.className="heart";
-heart.innerHTML="💖";
-heart.style.setProperty('--x',(Math.random()-0.5)*900+'px');
-heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),2000);
-}
-
-// через 2 секунды финальный экран
 setTimeout(showFinal,2000);
 
 });
 
+/* FINAL SCREEN */
+
 function showFinal(){
 
-// очищаем всё
 card.innerHTML="";
 
-// создаём облачко
 let cloud=document.createElement("div");
-cloud.style.position="fixed";
-cloud.style.left="50%";
-cloud.style.top="50%";
-cloud.style.transform="translate(-50%,-50%)";
-cloud.style.background="white";
-cloud.style.padding="50px 70px";
-cloud.style.borderRadius="60px";
-cloud.style.boxShadow="0 20px 60px rgba(0,0,0,0.2)";
-cloud.style.fontSize="32px";
-cloud.style.color="#ff4d88";
-cloud.style.textAlign="center";
-cloud.style.zIndex="1000";
-cloud.style.animation="fadeIn 0.8s ease forwards";
-
+cloud.className="cloud";
 cloud.innerHTML="Люблю тебя, МОЙ ЗАЙЧОНОК 😘💖";
 
 document.body.appendChild(cloud);
 
-// сердечки от центра
+// hearts explode from center
 for(let i=0;i<70;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💖";
-heart.style.position="fixed";
-heart.style.left="50%";
-heart.style.top="50%";
 heart.style.setProperty('--x',(Math.random()-0.5)*800+'px');
 heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
 document.body.appendChild(heart);
@@ -248,3 +234,8 @@ setTimeout(()=>heart.remove(),2000);
 }
 
 }
+
+</script>
+
+</body>
+</html>
