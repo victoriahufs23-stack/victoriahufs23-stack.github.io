@@ -1,0 +1,168 @@
+{\rtf1\ansi\ansicpg1251\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+<meta charset="UTF-8">\
+<meta name="viewport" content="width=device-width, initial-scale=1.0">\
+<title>Valentine</title>\
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">\
+<style>\
+body\{\
+margin:0;\
+height:100vh;\
+display:flex;\
+justify-content:center;\
+align-items:center;\
+background:linear-gradient(135deg,#fbd3e9,#ffdfe9,#ffeef5);\
+font-family:Poppins, sans-serif;\
+overflow:hidden;\
+\}\
+\
+.card\{\
+background:#fff;\
+padding:45px 55px;\
+border-radius:28px;\
+text-align:center;\
+box-shadow:0 25px 60px rgba(0,0,0,.18);\
+position:relative;\
+animation:pop .6s ease;\
+\}\
+\
+@keyframes pop\{\
+0%\{transform:scale(.7);opacity:0\}\
+100%\{transform:scale(1);opacity:1\}\
+\}\
+\
+h1\{\
+font-family:Pacifico,cursive;\
+color:#ff5c8a;\
+margin:0 0 10px;\
+font-size:34px;\
+\}\
+\
+p\{\
+margin:15px 0 25px;\
+font-size:18px;\
+color:#444;\
+\}\
+\
+.cat\{\
+width:140px;\
+margin:10px auto;\
+\}\
+\
+.buttons\{\
+position:relative;\
+height:60px;\
+\}\
+\
+button\{\
+border:none;\
+padding:13px 28px;\
+font-size:16px;\
+border-radius:25px;\
+cursor:pointer;\
+position:absolute;\
+transition:.2s;\
+font-weight:600;\
+box-shadow:0 6px 15px rgba(0,0,0,.15);\
+\}\
+\
+#yes\{\
+background:#42d77d;\
+color:white;\
+left:25%;\
+\}\
+\
+#yes:hover\{\
+transform:scale(1.1);\
+\}\
+\
+#no\{\
+background:#ff4d4d;\
+color:white;\
+right:25%;\
+\}\
+\
+.hearts span\{\
+position:absolute;\
+font-size:14px;\
+animation:float linear infinite;\
+opacity:.7;\
+\}\
+\
+@keyframes float\{\
+from\{ transform:translateY(100vh) scale(.7);\} \
+ to\{ transform:translateY(-10vh) scale(1.2);\} \
+\}\
+\
+.success\{\
+font-family:Pacifico,cursive;\
+font-size:42px;\
+color:#ff5c8a;\
+animation:pop .6s ease;\
+\}\
+</style>\
+</head>\
+<body>\
+\
+<div class="hearts" id="hearts"></div>\
+\
+<div class="card" id="card">\
+<h1>Hey Cutie!</h1>\
+<img class="cat" src="https://media.tenor.com/9q9Yw0Zq0j8AAAAi/cute-cat.gif">\
+<p>Will you be my Valentine?</p>\
+<div class="buttons">\
+<button id="yes">Yes</button>\
+<button id="no">No</button>\
+</div>\
+</div>\
+\
+<script>\
+const noBtn=document.getElementById("no");\
+const yesBtn=document.getElementById("yes");\
+const card=document.getElementById("card");\
+\
+function moveButton()\{\
+const cardRect=card.getBoundingClientRect();\
+const maxX=cardRect.width-100;\
+const maxY=cardRect.height-60;\
+const x=Math.random()*maxX-maxX/2;\
+const y=Math.random()*maxY-maxY/2;\
+noBtn.style.transform=`translate($\{x\}px,$\{y\}px)`;\
+\}\
+\
+noBtn.addEventListener("mouseover",moveButton);\
+noBtn.addEventListener("click",moveButton);\
+\
+let scale=1;\
+yesBtn.addEventListener("mouseover",()=>\{\
+scale+=0.1;\
+yesBtn.style.transform=`scale($\{scale\})`;\
+\});\
+\
+yesBtn.addEventListener("click",()=>\{\
+document.body.innerHTML="<div class='success'>YAAAY \uc0\u55357 \u56470 </div>";\
+\});\
+\
+// floating hearts\
+const container=document.getElementById("hearts");\
+setInterval(()=>\{\
+const heart=document.createElement("span");\
+heart.innerHTML="\uc0\u55357 \u56471 ";\
+heart.style.left=Math.random()*100+"vw";\
+heart.style.animationDuration=4+Math.random()*4+"s";\
+container.appendChild(heart);\
+setTimeout(()=>heart.remove(),8000);\
+\},250);\
+</script>\
+\
+</body>\
+</html>\
+}
