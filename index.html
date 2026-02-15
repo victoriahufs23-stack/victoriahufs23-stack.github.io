@@ -1,128 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Valentine</title>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-<style>
-body{
-margin:0;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#ffd6e7,#ffeef5);
-font-family:sans-serif;
-overflow:hidden;
-}
-
-.card{
-background:white;
-padding:40px;
-border-radius:30px;
-text-align:center;
-box-shadow:0 20px 60px rgba(0,0,0,0.12);
-width:430px;
-}
-
-h1{
-color:#ff4d88;
-margin-bottom:20px;
-}
-
-#emoji{
-font-size:120px;
-height:140px;
-display:flex;
-align-items:center;
-justify-content:center;
-transition:.3s;
-}
-
-#message{
-margin-top:10px;
-font-size:20px;
-color:#ff4d88;
-min-height:30px;
-}
-
-.buttons{
-position:relative;
-height:120px;
-margin-top:25px;
-}
-
-button{
-border:none;
-padding:18px 45px;
-font-size:22px;
-border-radius:40px;
-cursor:pointer;
-position:absolute;
-transition:.3s;
-}
-
-#yes{
-background:#4CAF50;
-color:white;
-left:8%;
-}
-
-#no{
-background:#ff4d4d;
-color:white;
-}
-
-/* облачко */
-.cloud{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-background:white;
-padding:40px 60px;
-border-radius:50px;
-box-shadow:0 20px 60px rgba(0,0,0,0.15);
-font-size:28px;
-color:#ff4d88;
-text-align:center;
-animation:pop 1s ease;
-}
-
-@keyframes pop{
-from{transform:translate(-50%,-50%) scale(.5);opacity:0}
-to{transform:translate(-50%,-50%) scale(1);opacity:1}
-}
-
-.heart{
-position:absolute;
-left:50%;
-top:50%;
-font-size:30px;
-animation:explode 2s ease-out forwards;
-}
-
-@keyframes explode{
-0%{transform:translate(0,0) scale(.5);opacity:1}
-100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
-}
-</style>
-</head>
-<body>
-
-<div class="card" id="card">
-<h1>Will you be my Valentine? 💕</h1>
-
-<div id="emoji">🙂</div>
-<div id="message"></div>
-
-<div class="buttons">
-<button id="yes">Yes</button>
-<button id="no">No</button>
-</div>
-</div>
-
 <script>
 
 const yes=document.getElementById("yes");
@@ -141,12 +16,20 @@ const sadStages=[
 {emoji:"😭💦", text:"this is so unfair 😭"}
 ];
 
-// No бегает по всему экрану
+// ДВИЖЕНИЕ В ПРЕДЕЛАХ БЕЛОЙ КАРТОЧКИ
 function moveNo(){
-const x=Math.random()*(window.innerWidth-120);
-const y=Math.random()*(window.innerHeight-60);
-no.style.left=x+"px";
-no.style.top=y+"px";
+
+const cardRect = card.getBoundingClientRect();
+const noRect = no.getBoundingClientRect();
+
+const maxX = cardRect.width - noRect.width - 20;
+const maxY = cardRect.height - noRect.height - 20;
+
+const randomX = Math.random() * maxX;
+const randomY = Math.random() * maxY;
+
+no.style.left = randomX + "px";
+no.style.top = randomY + "px";
 }
 
 no.addEventListener("mouseover",moveNo);
@@ -157,15 +40,16 @@ emoji.innerHTML=sadStages[count].emoji;
 message.innerHTML=sadStages[count].text;
 count++;
 }
+
 yesScale+=0.2;
 yes.style.transform=`scale(${yesScale})`;
+
 moveNo();
 });
 
 yes.addEventListener("click",()=>{
 
 confetti({particleCount:300,spread:150});
-
 setTimeout(showFinal,2000);
 
 });
@@ -187,8 +71,8 @@ for(let i=0;i<80;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💖";
-heart.style.setProperty('--x',(Math.random()-0.5)*900+'px');
-heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
+heart.style.setProperty('--x',(Math.random()-0.5)*600+'px');
+heart.style.setProperty('--y',(Math.random()-0.5)*400+'px');
 document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),2000);
 }
@@ -196,6 +80,3 @@ setTimeout(()=>heart.remove(),2000);
 }
 
 </script>
-
-</body>
-</html>
