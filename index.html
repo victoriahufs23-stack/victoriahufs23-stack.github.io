@@ -20,24 +20,28 @@ overflow:hidden;
 .card{
 background:white;
 padding:40px;
-border-radius:25px;
+border-radius:30px;
 text-align:center;
-box-shadow:0 20px 50px rgba(0,0,0,0.15);
-width:350px;
+box-shadow:0 20px 60px rgba(0,0,0,0.12);
+width:380px;
 }
 
-h1{color:#ff4d88;}
+h1{
+color:#ff4d88;
+margin-bottom:20px;
+}
+
 .buttons{
 position:relative;
-height:80px;
+height:100px;
 margin-top:20px;
 }
 
 button{
 border:none;
-padding:12px 25px;
-font-size:18px;
-border-radius:25px;
+padding:15px 35px;
+font-size:20px;
+border-radius:40px;
 cursor:pointer;
 position:absolute;
 transition:.3s;
@@ -46,101 +50,115 @@ transition:.3s;
 #yes{
 background:#4CAF50;
 color:white;
-left:10%;
+left:8%;
 }
 
 #no{
 background:#ff4d4d;
 color:white;
-right:10%;
+right:8%;
 }
 
+/* ---- CHIBI BUNNY ---- */
+
 .bunny{
-width:150px;
-height:150px;
-margin:20px auto;
+width:160px;
+height:180px;
+margin:0 auto;
 position:relative;
 }
 
 .head{
-width:120px;
-height:110px;
-background:white;
-border-radius:60% 60% 55% 55%;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
+width:130px;
+height:120px;
+background:radial-gradient(circle at 50% 40%, #ffffff 70%, #f2f2f2);
+border-radius:60%;
 position:absolute;
 left:15px;
 top:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
 
+.ear{
+width:35px;
+height:45px;
+background:radial-gradient(circle at 50% 40%, #ffffff 70%, #f2f2f2);
+border-radius:50%;
+position:absolute;
+top:0;
+}
+
+.ear.left{ left:25px; }
+.ear.right{ right:25px; }
+
 .eye{
-width:14px;
-height:18px;
+width:16px;
+height:20px;
 background:#5b3a2e;
 border-radius:50%;
 position:absolute;
-top:50px;
+top:55px;
 }
 
-.eye.left{left:35px;}
-.eye.right{right:35px;}
+.eye.left{ left:40px; }
+.eye.right{ right:40px; }
 
 .cheek{
-width:20px;
-height:20px;
+width:22px;
+height:22px;
 background:#ffb3c7;
 border-radius:50%;
 position:absolute;
-top:65px;
+top:75px;
 opacity:.7;
 }
 
-.cheek.left{left:15px;}
-.cheek.right{right:15px;}
+.cheek.left{ left:20px; }
+.cheek.right{ right:20px; }
 
 .tear{
-width:6px;
-height:10px;
+width:7px;
+height:12px;
 background:#5ec6ff;
 border-radius:50%;
 position:absolute;
-top:70px;
+top:75px;
 animation:drop 1.5s infinite;
 }
 
-.tear.left{left:40px;}
-.tear.right{right:40px;animation-delay:.7s;}
+.tear.left{ left:50px; }
+.tear.right{ right:50px; animation-delay:.6s; }
 
 @keyframes drop{
 0%{transform:translateY(0);opacity:1}
-100%{transform:translateY(30px);opacity:0}
+100%{transform:translateY(35px);opacity:0}
 }
 
 .pillow{
-width:120px;
+width:140px;
 height:60px;
 background:#b3e5ff;
-border-radius:50px;
+border-radius:60px;
 position:absolute;
 bottom:10px;
-left:15px;
+left:10px;
 animation:shake 1s infinite;
 }
 
 @keyframes shake{
 0%{transform:translateX(0)}
-50%{transform:translateX(5px)}
+50%{transform:translateX(6px)}
 100%{transform:translateX(0)}
 }
 
 .puddle{
-width:130px;
-height:25px;
+width:150px;
+height:30px;
 background:#a8dcff;
 border-radius:50%;
 position:absolute;
 bottom:0;
-left:10px;
+left:5px;
 animation:pulse 1.5s infinite;
 }
 
@@ -150,11 +168,17 @@ animation:pulse 1.5s infinite;
 100%{transform:scale(1)}
 }
 
+/* Grey bunny */
+.grey .head{
+background:radial-gradient(circle at 50% 40%, #dcdcdc 70%, #cfcfcf);
+}
+
+/* Hearts explosion */
 .heart{
 position:absolute;
 left:50%;
 top:50%;
-font-size:20px;
+font-size:22px;
 animation:explode 2s ease-out forwards;
 }
 
@@ -162,13 +186,13 @@ animation:explode 2s ease-out forwards;
 0%{transform:translate(0,0) scale(.5);opacity:1}
 100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
 }
+
 </style>
 </head>
 <body>
 
-<div class="card" id="card">
+<div class="card">
 <h1>Will you be my Valentine? 💕</h1>
-
 <div id="scene"></div>
 
 <div class="buttons">
@@ -198,6 +222,8 @@ yes.style.transform=`scale(${yesScale})`;
 if(count===1){
 scene.innerHTML=`
 <div class="bunny">
+<div class="ear left"></div>
+<div class="ear right"></div>
 <div class="head">
 <div class="eye left"></div>
 <div class="eye right"></div>
@@ -212,6 +238,8 @@ scene.innerHTML=`
 if(count===2){
 scene.innerHTML=`
 <div class="bunny">
+<div class="ear left"></div>
+<div class="ear right"></div>
 <div class="head">
 <div class="eye left"></div>
 <div class="eye right"></div>
@@ -225,6 +253,8 @@ scene.innerHTML=`
 if(count>=3){
 scene.innerHTML=`
 <div class="bunny">
+<div class="ear left"></div>
+<div class="ear right"></div>
 <div class="head">
 <div class="eye left"></div>
 <div class="eye right"></div>
@@ -241,7 +271,27 @@ yes.addEventListener("click",()=>{
 confetti({particleCount:300,spread:150});
 
 if(count===0){
-scene.innerHTML="<h2>I love youuu 💖</h2>";
+scene.innerHTML=`
+<div class="bunny">
+<div class="ear left"></div>
+<div class="ear right"></div>
+<div class="head">
+<div class="eye left"></div>
+<div class="eye right"></div>
+<div class="cheek left"></div>
+<div class="cheek right"></div>
+</div>
+</div>
+<div class="bunny grey" style="margin-top:-100px">
+<div class="ear left"></div>
+<div class="ear right"></div>
+<div class="head">
+<div class="eye left"></div>
+<div class="eye right"></div>
+<div class="cheek left"></div>
+<div class="cheek right"></div>
+</div>
+</div>`;
 }else{
 scene.innerHTML="<h2>You have no choice now 😏💘</h2>";
 }
