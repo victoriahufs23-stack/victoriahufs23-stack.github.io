@@ -23,12 +23,12 @@ padding:40px;
 border-radius:30px;
 text-align:center;
 box-shadow:0 20px 60px rgba(0,0,0,0.12);
-width:420px;
+width:430px;
 }
 
 h1{
 color:#ff4d88;
-margin-bottom:25px;
+margin-bottom:20px;
 }
 
 #emoji{
@@ -40,10 +40,18 @@ align-items:center;
 justify-content:center;
 }
 
+#message{
+margin-top:10px;
+font-size:20px;
+color:#ff4d88;
+min-height:30px;
+transition:.3s;
+}
+
 .buttons{
 position:relative;
 height:120px;
-margin-top:20px;
+margin-top:25px;
 }
 
 button{
@@ -80,14 +88,27 @@ animation:explode 2s ease-out forwards;
 0%{transform:translate(0,0) scale(.5);opacity:1}
 100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
 }
+
+.loveText{
+position:absolute;
+font-size:28px;
+color:#ff4d88;
+animation:fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
+}
 </style>
 </head>
 <body>
 
-<div class="card">
+<div class="card" id="card">
 <h1>Will you be my Valentine? 💕</h1>
 
 <div id="emoji">🙂</div>
+<div id="message"></div>
 
 <div class="buttons">
 <button id="yes">Yes</button>
@@ -100,15 +121,17 @@ animation:explode 2s ease-out forwards;
 const yes=document.getElementById("yes");
 const no=document.getElementById("no");
 const emoji=document.getElementById("emoji");
+const message=document.getElementById("message");
+const card=document.getElementById("card");
 
 let count=0;
 let yesScale=1;
 
 const sadStages=[
-"🥺",
-"😢",
-"😭",
-"😭💦"
+{emoji:"🥺", text:"please don’t say no…"},
+{emoji:"😢", text:"you’re breaking my heart"},
+{emoji:"😭", text:"I’m crying…"},
+{emoji:"😭💦", text:"this is so unfair 😭"}
 ];
 
 no.addEventListener("mouseover",()=>{
@@ -117,19 +140,18 @@ no.style.transform=`translate(${Math.random()*60-30}px,${Math.random()*40-20}px)
 
 no.addEventListener("click",()=>{
 if(count<sadStages.length){
-emoji.innerHTML=sadStages[count];
+emoji.innerHTML=sadStages[count].emoji;
+message.innerHTML=sadStages[count].text;
 emoji.style.transform="scale(1.2)";
 setTimeout(()=>emoji.style.transform="scale(1)",200);
 count++;
 }
-
 yesScale+=0.2;
 yes.style.transform=`scale(${yesScale})`;
 });
 
 yes.addEventListener("click",()=>{
 
-// Конфетти
 confetti({
 particleCount:300,
 spread:150
@@ -137,12 +159,14 @@ spread:150
 
 if(count===0){
 emoji.innerHTML="😍";
+message.innerHTML="Yaaay!! 💖";
 }else{
 emoji.innerHTML="🥳💖";
+message.innerHTML="You have no choice now 😏💘";
 }
 
-// Сердца из центра
-for(let i=0;i<70;i++){
+// сердца
+for(let i=0;i<60;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💖";
@@ -152,7 +176,25 @@ document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),2000);
 }
 
+// через 2 секунды финальный экран
+setTimeout(showFinal,2000);
+
 });
+
+function showFinal(){
+card.innerHTML="";
+
+for(let i=0;i<15;i++){
+setTimeout(()=>{
+let text=document.createElement("div");
+text.className="loveText";
+text.innerHTML="I love you 💖";
+text.style.left=Math.random()*80+"vw";
+text.style.top=Math.random()*80+"vh";
+document.body.appendChild(text);
+},i*300);
+}
+}
 
 </script>
 
