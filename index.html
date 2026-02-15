@@ -33,11 +33,11 @@ margin-bottom:20px;
 
 #emoji{
 font-size:120px;
-transition:.3s;
 height:140px;
 display:flex;
 align-items:center;
 justify-content:center;
+transition:.3s;
 }
 
 #message{
@@ -45,7 +45,6 @@ margin-top:10px;
 font-size:20px;
 color:#ff4d88;
 min-height:30px;
-transition:.3s;
 }
 
 .buttons{
@@ -73,7 +72,27 @@ left:8%;
 #no{
 background:#ff4d4d;
 color:white;
-right:8%;
+}
+
+/* облачко */
+.cloud{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:40px 60px;
+border-radius:50px;
+box-shadow:0 20px 60px rgba(0,0,0,0.15);
+font-size:28px;
+color:#ff4d88;
+text-align:center;
+animation:pop 1s ease;
+}
+
+@keyframes pop{
+from{transform:translate(-50%,-50%) scale(.5);opacity:0}
+to{transform:translate(-50%,-50%) scale(1);opacity:1}
 }
 
 .heart{
@@ -87,18 +106,6 @@ animation:explode 2s ease-out forwards;
 @keyframes explode{
 0%{transform:translate(0,0) scale(.5);opacity:1}
 100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
-}
-
-.loveText{
-position:absolute;
-font-size:28px;
-color:#ff4d88;
-animation:fadeIn 1s ease forwards;
-}
-
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
@@ -134,39 +141,49 @@ const sadStages=[
 {emoji:"😭💦", text:"this is so unfair 😭"}
 ];
 
-no.addEventListener("mouseover",()=>{
-no.style.transform=`translate(${Math.random()*60-30}px,${Math.random()*40-20}px)`;
-});
+// No бегает по всему экрану
+function moveNo(){
+const x=Math.random()*(window.innerWidth-120);
+const y=Math.random()*(window.innerHeight-60);
+no.style.left=x+"px";
+no.style.top=y+"px";
+}
+
+no.addEventListener("mouseover",moveNo);
 
 no.addEventListener("click",()=>{
 if(count<sadStages.length){
 emoji.innerHTML=sadStages[count].emoji;
 message.innerHTML=sadStages[count].text;
-emoji.style.transform="scale(1.2)";
-setTimeout(()=>emoji.style.transform="scale(1)",200);
 count++;
 }
 yesScale+=0.2;
 yes.style.transform=`scale(${yesScale})`;
+moveNo();
 });
 
 yes.addEventListener("click",()=>{
 
-confetti({
-particleCount:300,
-spread:150
+confetti({particleCount:300,spread:150});
+
+setTimeout(showFinal,2000);
+
 });
 
-if(count===0){
-emoji.innerHTML="😍";
-message.innerHTML="Yaaay!! 💖";
-}else{
-emoji.innerHTML="🥳💖";
-message.innerHTML="You have no choice now 😏💘";
-}
+function showFinal(){
+card.innerHTML="";
+
+let cloud=document.createElement("div");
+cloud.className="cloud";
+cloud.innerHTML=`
+<strong>I love you, Honey-bunny!!! 💖</strong><br><br>
+I love you to the moon and back 🌙✨
+`;
+
+document.body.appendChild(cloud);
 
 // сердца
-for(let i=0;i<60;i++){
+for(let i=0;i<80;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💖";
@@ -176,24 +193,6 @@ document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),2000);
 }
 
-// через 2 секунды финальный экран
-setTimeout(showFinal,2000);
-
-});
-
-function showFinal(){
-card.innerHTML="";
-
-for(let i=0;i<15;i++){
-setTimeout(()=>{
-let text=document.createElement("div");
-text.className="loveText";
-text.innerHTML="I love you 💖";
-text.style.left=Math.random()*80+"vw";
-text.style.top=Math.random()*80+"vh";
-document.body.appendChild(text);
-},i*300);
-}
 }
 
 </script>
