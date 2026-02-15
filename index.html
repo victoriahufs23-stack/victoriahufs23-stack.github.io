@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Valentine</title>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
@@ -21,25 +19,24 @@ overflow:hidden;
 
 .card{
 background:white;
-padding:40px 50px;
+padding:40px;
 border-radius:25px;
 text-align:center;
 box-shadow:0 20px 50px rgba(0,0,0,0.15);
-position:relative;
+width:350px;
 }
 
-h1{color:#ff4d88;margin-bottom:10px}
-p{font-size:18px;margin-bottom:25px}
-
+h1{color:#ff4d88;}
 .buttons{
 position:relative;
 height:80px;
+margin-top:20px;
 }
 
 button{
 border:none;
 padding:12px 25px;
-font-size:16px;
+font-size:18px;
 border-radius:25px;
 cursor:pointer;
 position:absolute;
@@ -49,116 +46,218 @@ transition:.3s;
 #yes{
 background:#4CAF50;
 color:white;
-left:25%;
+left:10%;
 }
 
 #no{
 background:#ff4d4d;
 color:white;
-right:25%;
+right:10%;
 }
 
-.message{
-margin-top:15px;
-height:24px;
-font-size:18px;
-color:#ff4d88;
+.bunny{
+width:150px;
+height:150px;
+margin:20px auto;
+position:relative;
 }
 
-/* hearts */
+.head{
+width:120px;
+height:110px;
+background:white;
+border-radius:60% 60% 55% 55%;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+position:absolute;
+left:15px;
+top:20px;
+}
+
+.eye{
+width:14px;
+height:18px;
+background:#5b3a2e;
+border-radius:50%;
+position:absolute;
+top:50px;
+}
+
+.eye.left{left:35px;}
+.eye.right{right:35px;}
+
+.cheek{
+width:20px;
+height:20px;
+background:#ffb3c7;
+border-radius:50%;
+position:absolute;
+top:65px;
+opacity:.7;
+}
+
+.cheek.left{left:15px;}
+.cheek.right{right:15px;}
+
+.tear{
+width:6px;
+height:10px;
+background:#5ec6ff;
+border-radius:50%;
+position:absolute;
+top:70px;
+animation:drop 1.5s infinite;
+}
+
+.tear.left{left:40px;}
+.tear.right{right:40px;animation-delay:.7s;}
+
+@keyframes drop{
+0%{transform:translateY(0);opacity:1}
+100%{transform:translateY(30px);opacity:0}
+}
+
+.pillow{
+width:120px;
+height:60px;
+background:#b3e5ff;
+border-radius:50px;
+position:absolute;
+bottom:10px;
+left:15px;
+animation:shake 1s infinite;
+}
+
+@keyframes shake{
+0%{transform:translateX(0)}
+50%{transform:translateX(5px)}
+100%{transform:translateX(0)}
+}
+
+.puddle{
+width:130px;
+height:25px;
+background:#a8dcff;
+border-radius:50%;
+position:absolute;
+bottom:0;
+left:10px;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
 .heart{
 position:absolute;
+left:50%;
+top:50%;
 font-size:20px;
-animation:float 3s linear forwards;
+animation:explode 2s ease-out forwards;
 }
 
-@keyframes float{
-0%{transform:translateY(0) scale(0.5);opacity:1}
-100%{transform:translateY(-200px) scale(2);opacity:0}
+@keyframes explode{
+0%{transform:translate(0,0) scale(.5);opacity:1}
+100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
 }
 </style>
 </head>
 <body>
 
 <div class="card" id="card">
-<h1>Hey Cutie! 💕</h1>
-<p>Will you be my Valentine?</p>
+<h1>Will you be my Valentine? 💕</h1>
+
+<div id="scene"></div>
 
 <div class="buttons">
 <button id="yes">Yes</button>
 <button id="no">No</button>
 </div>
-
-<div class="message" id="msg"></div>
 </div>
 
 <script>
-const noBtn=document.getElementById("no");
-const yesBtn=document.getElementById("yes");
-const msg=document.getElementById("msg");
 
-let noCount=0;
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const scene=document.getElementById("scene");
+
+let count=0;
 let yesScale=1;
 
-const texts=[
-"Nooo 😢",
-"please baby... 🥺",
-"don't do this to me 😿",
-"you are breaking my heart 😭💔"
-];
+no.addEventListener("mouseover",()=>{
+no.style.transform=`translate(${Math.random()*60-30}px,${Math.random()*40-20}px)`;
+});
 
-function moveButton(){
-const x=Math.random()*150-75;
-const y=Math.random()*80-40;
-noBtn.style.transform=`translate(${x}px,${y}px)`;
-}
-
-noBtn.addEventListener("mouseover",moveButton);
-
-noBtn.addEventListener("click",()=>{
-moveButton();
-
-if(noCount<texts.length){
-msg.textContent=texts[noCount];
-noCount++;
+no.addEventListener("click",()=>{
+count++;
 yesScale+=0.2;
-yesBtn.style.transform=`scale(${yesScale})`;
+yes.style.transform=`scale(${yesScale})`;
+
+if(count===1){
+scene.innerHTML=`
+<div class="bunny">
+<div class="head">
+<div class="eye left"></div>
+<div class="eye right"></div>
+<div class="cheek left"></div>
+<div class="cheek right"></div>
+<div class="tear left"></div>
+<div class="tear right"></div>
+</div>
+</div>`;
+}
+
+if(count===2){
+scene.innerHTML=`
+<div class="bunny">
+<div class="head">
+<div class="eye left"></div>
+<div class="eye right"></div>
+<div class="cheek left"></div>
+<div class="cheek right"></div>
+</div>
+<div class="pillow"></div>
+</div>`;
+}
+
+if(count>=3){
+scene.innerHTML=`
+<div class="bunny">
+<div class="head">
+<div class="eye left"></div>
+<div class="eye right"></div>
+<div class="cheek left"></div>
+<div class="cheek right"></div>
+</div>
+<div class="puddle"></div>
+</div>`;
 }
 });
 
-yesBtn.addEventListener("click",()=>{
+yes.addEventListener("click",()=>{
 
-// confetti
-confetti({
-particleCount:200,
-spread:120,
-origin:{y:0.6}
-});
+confetti({particleCount:300,spread:150});
 
-// replace card
-document.body.innerHTML=`
-<div style="text-align:center">
-<h1 style="color:#ff4d88;font-size:40px">I LOVE YOU 💖</h1>
-<h2 style="color:#ff6fa5">Happy Valentine's Day!</h2>
-</div>
-`;
+if(count===0){
+scene.innerHTML="<h2>I love youuu 💖</h2>";
+}else{
+scene.innerHTML="<h2>You have no choice now 😏💘</h2>";
+}
 
-// hearts animation
-for(let i=0;i<50;i++){
-setTimeout(()=>{
+for(let i=0;i<60;i++){
 let heart=document.createElement("div");
 heart.className="heart";
 heart.innerHTML="💖";
-heart.style.left=Math.random()*100+"vw";
-heart.style.bottom="0";
-heart.style.fontSize=(20+Math.random()*30)+"px";
+heart.style.setProperty('--x',(Math.random()-0.5)*800+'px');
+heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
 document.body.appendChild(heart);
-
-setTimeout(()=>heart.remove(),3000);
-},i*100);
+setTimeout(()=>heart.remove(),2000);
 }
 
 });
+
 </script>
 
 </body>
