@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Valentine</title>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
 body{
@@ -23,7 +22,7 @@ padding:40px;
 border-radius:30px;
 text-align:center;
 box-shadow:0 20px 60px rgba(0,0,0,0.12);
-width:380px;
+width:400px;
 }
 
 h1{
@@ -59,132 +58,13 @@ color:white;
 right:8%;
 }
 
-/* ---- CHIBI BUNNY ---- */
-
-.bunny{
-width:160px;
-height:180px;
-margin:0 auto;
-position:relative;
-}
-
-.head{
-width:130px;
-height:120px;
-background:radial-gradient(circle at 50% 40%, #ffffff 70%, #f2f2f2);
-border-radius:60%;
-position:absolute;
-left:15px;
-top:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-}
-
-.ear{
-width:35px;
-height:45px;
-background:radial-gradient(circle at 50% 40%, #ffffff 70%, #f2f2f2);
-border-radius:50%;
-position:absolute;
-top:0;
-}
-
-.ear.left{ left:25px; }
-.ear.right{ right:25px; }
-
-.eye{
-width:16px;
-height:20px;
-background:#5b3a2e;
-border-radius:50%;
-position:absolute;
-top:55px;
-}
-
-.eye.left{ left:40px; }
-.eye.right{ right:40px; }
-
-.cheek{
-width:22px;
-height:22px;
-background:#ffb3c7;
-border-radius:50%;
-position:absolute;
-top:75px;
-opacity:.7;
-}
-
-.cheek.left{ left:20px; }
-.cheek.right{ right:20px; }
-
 .tear{
-width:7px;
-height:12px;
-background:#5ec6ff;
-border-radius:50%;
-position:absolute;
-top:75px;
-animation:drop 1.5s infinite;
+animation:tearDrop 1.4s infinite ease-in;
 }
 
-.tear.left{ left:50px; }
-.tear.right{ right:50px; animation-delay:.6s; }
-
-@keyframes drop{
-0%{transform:translateY(0);opacity:1}
-100%{transform:translateY(35px);opacity:0}
-}
-
-.pillow{
-width:140px;
-height:60px;
-background:#b3e5ff;
-border-radius:60px;
-position:absolute;
-bottom:10px;
-left:10px;
-animation:shake 1s infinite;
-}
-
-@keyframes shake{
-0%{transform:translateX(0)}
-50%{transform:translateX(6px)}
-100%{transform:translateX(0)}
-}
-
-.puddle{
-width:150px;
-height:30px;
-background:#a8dcff;
-border-radius:50%;
-position:absolute;
-bottom:0;
-left:5px;
-animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-0%{transform:scale(1)}
-50%{transform:scale(1.1)}
-100%{transform:scale(1)}
-}
-
-/* Grey bunny */
-.grey .head{
-background:radial-gradient(circle at 50% 40%, #dcdcdc 70%, #cfcfcf);
-}
-
-/* Hearts explosion */
-.heart{
-position:absolute;
-left:50%;
-top:50%;
-font-size:22px;
-animation:explode 2s ease-out forwards;
-}
-
-@keyframes explode{
-0%{transform:translate(0,0) scale(.5);opacity:1}
-100%{transform:translate(var(--x),var(--y)) scale(2);opacity:0}
+@keyframes tearDrop{
+0%{transform:translateY(0); opacity:1}
+100%{transform:translateY(30px); opacity:0}
 }
 
 </style>
@@ -193,6 +73,7 @@ animation:explode 2s ease-out forwards;
 
 <div class="card">
 <h1>Will you be my Valentine? 💕</h1>
+
 <div id="scene"></div>
 
 <div class="buttons">
@@ -203,107 +84,56 @@ animation:explode 2s ease-out forwards;
 
 <script>
 
-const yes=document.getElementById("yes");
 const no=document.getElementById("no");
+const yes=document.getElementById("yes");
 const scene=document.getElementById("scene");
 
 let count=0;
-let yesScale=1;
-
-no.addEventListener("mouseover",()=>{
-no.style.transform=`translate(${Math.random()*60-30}px,${Math.random()*40-20}px)`;
-});
 
 no.addEventListener("click",()=>{
+
 count++;
-yesScale+=0.2;
-yes.style.transform=`scale(${yesScale})`;
 
 if(count===1){
+
 scene.innerHTML=`
-<div class="bunny">
-<div class="ear left"></div>
-<div class="ear right"></div>
-<div class="head">
-<div class="eye left"></div>
-<div class="eye right"></div>
-<div class="cheek left"></div>
-<div class="cheek right"></div>
-<div class="tear left"></div>
-<div class="tear right"></div>
-</div>
-</div>`;
-}
+<svg width="200" height="200" viewBox="0 0 200 200">
 
-if(count===2){
-scene.innerHTML=`
-<div class="bunny">
-<div class="ear left"></div>
-<div class="ear right"></div>
-<div class="head">
-<div class="eye left"></div>
-<div class="eye right"></div>
-<div class="cheek left"></div>
-<div class="cheek right"></div>
-</div>
-<div class="pillow"></div>
-</div>`;
-}
+<!-- Shadow -->
+<ellipse cx="100" cy="170" rx="45" ry="10" fill="rgba(0,0,0,0.1)" />
 
-if(count>=3){
-scene.innerHTML=`
-<div class="bunny">
-<div class="ear left"></div>
-<div class="ear right"></div>
-<div class="head">
-<div class="eye left"></div>
-<div class="eye right"></div>
-<div class="cheek left"></div>
-<div class="cheek right"></div>
-</div>
-<div class="puddle"></div>
-</div>`;
-}
-});
+<!-- Body -->
+<ellipse cx="100" cy="120" rx="45" ry="50" fill="url(#gradWhite)" />
 
-yes.addEventListener("click",()=>{
+<!-- Head -->
+<ellipse cx="100" cy="75" rx="55" ry="50" fill="url(#gradWhite)" />
 
-confetti({particleCount:300,spread:150});
+<!-- Ears -->
+<ellipse cx="75" cy="35" rx="18" ry="28" fill="url(#gradWhite)" />
+<ellipse cx="125" cy="35" rx="18" ry="28" fill="url(#gradWhite)" />
 
-if(count===0){
-scene.innerHTML=`
-<div class="bunny">
-<div class="ear left"></div>
-<div class="ear right"></div>
-<div class="head">
-<div class="eye left"></div>
-<div class="eye right"></div>
-<div class="cheek left"></div>
-<div class="cheek right"></div>
-</div>
-</div>
-<div class="bunny grey" style="margin-top:-100px">
-<div class="ear left"></div>
-<div class="ear right"></div>
-<div class="head">
-<div class="eye left"></div>
-<div class="eye right"></div>
-<div class="cheek left"></div>
-<div class="cheek right"></div>
-</div>
-</div>`;
-}else{
-scene.innerHTML="<h2>You have no choice now 😏💘</h2>";
-}
+<!-- Eyes -->
+<ellipse cx="85" cy="75" rx="6" ry="8" fill="#5b3a2e" />
+<ellipse cx="115" cy="75" rx="6" ry="8" fill="#5b3a2e" />
 
-for(let i=0;i<60;i++){
-let heart=document.createElement("div");
-heart.className="heart";
-heart.innerHTML="💖";
-heart.style.setProperty('--x',(Math.random()-0.5)*800+'px');
-heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),2000);
+<!-- Cheeks -->
+<circle cx="70" cy="95" r="12" fill="#ffb3c7" opacity=".6"/>
+<circle cx="130" cy="95" r="12" fill="#ffb3c7" opacity=".6"/>
+
+<!-- Tears -->
+<ellipse class="tear" cx="85" cy="90" rx="4" ry="7" fill="#5ec6ff"/>
+<ellipse class="tear" cx="115" cy="90" rx="4" ry="7" fill="#5ec6ff" style="animation-delay:.6s"/>
+
+<defs>
+<radialGradient id="gradWhite" cx="50%" cy="40%">
+<stop offset="0%" stop-color="#ffffff"/>
+<stop offset="100%" stop-color="#f0f0f0"/>
+</radialGradient>
+</defs>
+
+</svg>
+`;
+
 }
 
 });
