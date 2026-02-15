@@ -211,19 +211,35 @@ setTimeout(showFinal,2000);
 function showFinal(){
 card.innerHTML="";
 
-for(let i=0;i<15;i++){
-setTimeout(()=>{
-let text=document.createElement("div");
-text.className="loveText";
-text.innerHTML="I love you 💖";
-text.style.left=Math.random()*80+"vw";
-text.style.top=Math.random()*80+"vh";
-document.body.appendChild(text);
-},i*300);
+// создаём облачко
+let cloud=document.createElement("div");
+cloud.style.position="absolute";
+cloud.style.left="50%";
+cloud.style.top="50%";
+cloud.style.transform="translate(-50%,-50%)";
+cloud.style.background="white";
+cloud.style.padding="40px 60px";
+cloud.style.borderRadius="50px";
+cloud.style.boxShadow="0 20px 60px rgba(0,0,0,0.15)";
+cloud.style.fontSize="28px";
+cloud.style.color="#ff4d88";
+cloud.style.textAlign="center";
+cloud.style.animation="fadeIn 1s ease forwards";
+
+cloud.innerHTML="Люблю тебя, МОЙ ЗАЙЧОНОК 😘💖";
+
+document.body.appendChild(cloud);
+
+// сердечки разлетаются от центра
+for(let i=0;i<60;i++){
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💖";
+heart.style.left="50%";
+heart.style.top="50%";
+heart.style.setProperty('--x',(Math.random()-0.5)*600+'px');
+heart.style.setProperty('--y',(Math.random()-0.5)*400+'px');
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),2000);
 }
 }
-
-</script>
-
-</body>
-</html>
