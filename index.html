@@ -24,7 +24,6 @@ border-radius:30px;
 text-align:center;
 box-shadow:0 20px 60px rgba(0,0,0,0.12);
 width:430px;
-position:relative;
 }
 
 h1{
@@ -34,11 +33,11 @@ margin-bottom:20px;
 
 #emoji{
 font-size:120px;
+transition:.3s;
 height:140px;
 display:flex;
 align-items:center;
 justify-content:center;
-transition:.3s;
 }
 
 #message{
@@ -86,14 +85,8 @@ animation:explode 2s ease-out forwards;
 }
 
 @keyframes explode{
-0%{
-transform:translate(-50%,-50%) scale(.5);
-opacity:1;
-}
-100%{
-transform:translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(2);
-opacity:0;
-}
+0%{transform:translate(-50%,-50%) scale(.5);opacity:1}
+100%{transform:translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(2);opacity:0}
 }
 
 .cloud{
@@ -108,12 +101,11 @@ box-shadow:0 20px 60px rgba(0,0,0,0.2);
 font-size:32px;
 color:#ff4d88;
 text-align:center;
-animation:fadeIn .8s ease forwards;
-z-index:1000;
+animation:fadeIn 0.8s ease forwards;
 }
 
 @keyframes fadeIn{
-from{opacity:0; transform:translate(-50%,-40%) scale(.8);}
+from{opacity:0; transform:translate(-50%,-50%) scale(.8);}
 to{opacity:1; transform:translate(-50%,-50%) scale(1);}
 }
 </style>
@@ -126,7 +118,7 @@ to{opacity:1; transform:translate(-50%,-50%) scale(1);}
 <div id="emoji">🙂</div>
 <div id="message"></div>
 
-<div class="buttons" id="buttons">
+<div class="buttons">
 <button id="yes">Yes</button>
 <button id="no">No</button>
 </div>
@@ -139,7 +131,6 @@ const no=document.getElementById("no");
 const emoji=document.getElementById("emoji");
 const message=document.getElementById("message");
 const card=document.getElementById("card");
-const buttons=document.getElementById("buttons");
 
 let count=0;
 let yesScale=1;
@@ -151,30 +142,10 @@ const sadStages=[
 {emoji:"😭💦", text:"this is so unfair 😭"}
 ];
 
-/* NO BUTTON movement only inside button area */
-
-function moveNo(){
-const areaRect = buttons.getBoundingClientRect();
-const noRect = no.getBoundingClientRect();
-
-const maxX = areaRect.width - noRect.width;
-const maxY = areaRect.height - noRect.height;
-
-const randomX = Math.random() * maxX;
-const randomY = Math.random() * maxY;
-
-no.style.left = randomX + "px";
-no.style.top = randomY + "px";
-
-if(count>=2){
-no.style.transition="all 0.2s ease";
-}
-if(count>=3){
-no.style.transition="all 0.1s linear";
-}
-}
-
-no.addEventListener("mouseover",moveNo);
+// ДВИЖЕНИЕ NO — КАК В ОРИГИНАЛЕ
+no.addEventListener("mouseover",()=>{
+no.style.transform=`translate(${Math.random()*60-30}px,${Math.random()*40-20}px)`;
+});
 
 no.addEventListener("click",()=>{
 if(count<sadStages.length){
@@ -186,10 +157,7 @@ count++;
 }
 yesScale+=0.2;
 yes.style.transform=`scale(${yesScale})`;
-moveNo();
 });
-
-/* YES BUTTON */
 
 yes.addEventListener("click",()=>{
 
@@ -206,11 +174,21 @@ emoji.innerHTML="🥳💖";
 message.innerHTML="You have no choice now 😏💘";
 }
 
+// сердца
+for(let i=0;i<60;i++){
+let heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="💖";
+heart.style.setProperty('--x',(Math.random()-0.5)*900+'px');
+heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),2000);
+}
+
+// финал через 2 секунды
 setTimeout(showFinal,2000);
 
 });
-
-/* FINAL SCREEN */
 
 function showFinal(){
 
@@ -221,18 +199,6 @@ cloud.className="cloud";
 cloud.innerHTML="Люблю тебя, МОЙ ЗАЙЧОНОК 😘💖";
 
 document.body.appendChild(cloud);
-
-// hearts explode from center
-for(let i=0;i<70;i++){
-let heart=document.createElement("div");
-heart.className="heart";
-heart.innerHTML="💖";
-heart.style.setProperty('--x',(Math.random()-0.5)*800+'px');
-heart.style.setProperty('--y',(Math.random()-0.5)*600+'px');
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),2000);
-}
-
 }
 
 </script>
